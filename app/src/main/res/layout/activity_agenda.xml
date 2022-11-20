@@ -9,7 +9,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewAct"
         android:layout_width="0dp"
-
+        tools:listitem="@layout/item_actividad"
         android:layout_height="0dp"
         android:layout_marginHorizontal="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
