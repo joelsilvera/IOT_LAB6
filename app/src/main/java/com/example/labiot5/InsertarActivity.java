@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -19,11 +20,15 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.labiot5.Entity.Actividad;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -32,11 +37,15 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.List;
 
 public class InsertarActivity extends AppCompatActivity {
 
     FirebaseAuth firebaseAuth;
     StorageReference storageRef;
+    FirebaseDatabase firebaseDatabase;
+    Actividad actividad = new Actividad();
+    List<Actividad> listaActividades ;
 
     DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
     DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
@@ -48,6 +57,7 @@ public class InsertarActivity extends AppCompatActivity {
     EditText etHorainicio;
     EditText etHorafin;
     ImageView imageView;
+    Button btnCrear;
 
     LocalTime timeInicio;
     LocalTime timeFin;
@@ -58,8 +68,10 @@ public class InsertarActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_insertar);
+        firebaseDatabase = FirebaseDatabase.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         storageRef = FirebaseStorage.getInstance().getReference().child(firebaseAuth.getCurrentUser().getUid());
+
 
         MaterialTimePicker pickerHoraInicio = new MaterialTimePicker.Builder().setTimeFormat(TimeFormat.CLOCK_12H)
                 .setHour(6)
@@ -95,6 +107,7 @@ public class InsertarActivity extends AppCompatActivity {
                 return;
             }
             etHorainicio.setText(timeInicio.format(timeFormatter));
+            actividad.setHoraInicio(timeInicio.format(timeFormatter));
         });
 
         MaterialTimePicker pickerHoraFin= new MaterialTimePicker.Builder().setTimeFormat(TimeFormat.CLOCK_12H)
@@ -131,6 +144,9 @@ public class InsertarActivity extends AppCompatActivity {
                 return;
             }
             etHorafin.setText(timeFin.format(timeFormatter));
+            actividad.setHoraFin(timeFin.format(timeFormatter));
+            btnCrear = findViewById(R.id.btnCrearActividad);
+            btnCrear.setEnabled(true);
         });
 
         etFecha = findViewById(R.id.editTextDate);
@@ -141,7 +157,7 @@ public class InsertarActivity extends AppCompatActivity {
         etHorainicio.setOnClickListener(view -> {
             if(etFecha.getText().toString().isEmpty()){
                 etFecha.setError("Indica una fecha");
-                Toast.makeText(InsertarActivity.this, "Inidica una fecha", Toast.LENGTH_SHORT).show();
+                Toast.makeText(InsertarActivity.this, "Indica una fecha", Toast.LENGTH_SHORT).show();
                 return;
             }
             pickerHoraInicio.show(getSupportFragmentManager(),"HoraInicio");
@@ -155,8 +171,6 @@ public class InsertarActivity extends AppCompatActivity {
             pickerHoraFin.show(getSupportFragmentManager(),"HoraFin");
         });
 
-
-
     }
 
     private void showDatePickerDialog(){
@@ -168,6 +182,7 @@ public class InsertarActivity extends AppCompatActivity {
                 selectedLocalDate = LocalDate.parse(selectedDate, dateFormatter);
                 if (!selectedLocalDate.isBefore(LocalDate.now())){
                     etFecha.setText(selectedDate);
+                    actividad.setFecha(selectedDate);
                     etFecha.setError(null);
                 }else{
                     etFecha.setText("");
@@ -197,6 +212,7 @@ public class InsertarActivity extends AppCompatActivity {
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             child.getDownloadUrl().addOnSuccessListener(uri1 -> {
                                 imageUrl = uri1.toString();
+                                actividad.setImagenUrl(imageUrl);
                                 Log.d("msg-test", "ruta archivo: " + imageUrl);
                                 updateImageView();
                             }).addOnFailureListener(e -> {
@@ -226,6 +242,29 @@ public class InsertarActivity extends AppCompatActivity {
         }else{
             imageView.setImageResource(R.drawable.placeholder_image);
         }
+    }
+
+    public void crearActividad(View view){
+
+        EditText titulo = findViewById(R.id.editTextTitulo);
+        EditText descripcion = findViewById(R.id.editTextDescripcion);
+
+        String tituloString  =  titulo.getText().toString();
+        String descripcionString = descripcion.getText().toString();
+
+        actividad.setTitulo(tituloString);
+        actividad.setDescripcion(descripcionString);
+
+        String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        Log.d("user",user);
+        String i = "1";
+        DatabaseReference databaseReference = firebaseDatabase.getReference().child(user).child("actividades");
+        databaseReference.child(actividad.getTitulo()).setValue(actividad);
+        startActivity(new Intent(InsertarActivity.this, AgendaActivity.class));
+        finish();
+
+
+
     }
 }
 
