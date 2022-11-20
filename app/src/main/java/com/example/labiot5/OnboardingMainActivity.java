@@ -1,5 +1,6 @@
 package com.example.labiot5;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
@@ -10,6 +11,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
+import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
+import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.Arrays;
 
 public class OnboardingMainActivity extends AppCompatActivity {
 
@@ -26,6 +35,12 @@ public class OnboardingMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_onboarding_main);
         getSupportActionBar().hide();
+
+        if(FirebaseAuth.getInstance().getCurrentUser()!=null){
+            startActivity(new Intent(OnboardingMainActivity.this, AgendaActivity.class));
+            finish();
+            return;
+        }
 
         backbtn = findViewById(R.id.backbtn);
         nextbtn = findViewById(R.id.nextbtn);
@@ -51,11 +66,7 @@ public class OnboardingMainActivity extends AppCompatActivity {
                 if (getitem(0) < 2)
                     mSLideViewPager.setCurrentItem(getitem(1),true);
                 else {
-
-                    Intent i = new Intent(OnboardingMainActivity.this,MainActivity.class);
-                    startActivity(i);
-                    finish();
-
+                    login();
                 }
 
             }
@@ -64,12 +75,7 @@ public class OnboardingMainActivity extends AppCompatActivity {
         skipbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
-                Intent i = new Intent(OnboardingMainActivity.this,MainActivity.class);
-                startActivity(i);
-                finish();
-
+                login();
             }
         });
 
@@ -135,5 +141,29 @@ public class OnboardingMainActivity extends AppCompatActivity {
     private int getitem(int i){
 
         return mSLideViewPager.getCurrentItem() + i;
+    }
+
+
+    private void login(){
+        Intent fbIntent = AuthUI.getInstance()
+                .createSignInIntentBuilder()
+                .setAvailableProviders(Arrays.asList(
+                        new AuthUI.IdpConfig.EmailBuilder().build(),
+                        new AuthUI.IdpConfig.GoogleBuilder().build()
+                ))
+                .build();
+        activityResultLauncher.launch(fbIntent);
+    }
+
+    private ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new FirebaseAuthUIActivityResultContract(), this::onSignInOnResult);
+
+    private void onSignInOnResult(FirebaseAuthUIAuthenticationResult result) {
+        if (result.getResultCode() == RESULT_OK) {
+            startActivity(new Intent(OnboardingMainActivity.this,AgendaActivity.class));
+            finish();
+        } else {
+            Toast.makeText(this, "Ha ocurrido un error al iniciar sesión.", Toast.LENGTH_SHORT).show();
+//            Log.d("msg-fb", "error al loguearse");
+        }
     }
 }

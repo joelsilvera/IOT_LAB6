@@ -124,12 +124,13 @@
             app:layout_constraintTop_toBottomOf="@+id/ivInsertar"/>
 
         <Button
-            android:enabled="false"
             android:id="@+id/btnCrearActividad"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:layout_marginBottom="32dp"
+            android:enabled="false"
+            android:onClick="crearActividad"
             android:text="Crear actividad"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

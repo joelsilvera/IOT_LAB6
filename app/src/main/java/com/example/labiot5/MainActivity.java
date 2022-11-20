@@ -15,6 +15,7 @@ import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Arrays;
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     });
 
     private FirebaseDatabase firebaseDatabase;
+
 
     private void onSignInOnResult(FirebaseAuthUIAuthenticationResult result) {
         if (result.getResultCode() == RESULT_OK) {
@@ -42,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         firebaseDatabase = FirebaseDatabase.getInstance();
+        String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference databaseReference = firebaseDatabase.getReference();
+        databaseReference.child(user).child("actividades");
 
         if(FirebaseAuth.getInstance().getCurrentUser()!=null){
             startActivity(new Intent(MainActivity.this, AgendaActivity.class));
