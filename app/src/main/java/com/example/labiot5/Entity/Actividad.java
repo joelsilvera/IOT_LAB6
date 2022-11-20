@@ -1,6 +1,8 @@
 package com.example.labiot5.Entity;
 
-public class Actividad {
+import java.io.Serializable;
+
+public class Actividad implements Serializable {
     private String titulo;
     private String descripcion;
     private String imagenUrl;

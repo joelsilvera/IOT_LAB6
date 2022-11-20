@@ -1,51 +1,22 @@
 package com.example.labiot5.Adapter;
-
-import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 import com.example.labiot5.Entity.Actividad;
+import com.example.labiot5.InsertarActivity;
 import com.example.labiot5.R;
-
 import java.util.ArrayList;
 
 public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.ViewHolder> {
+
     private ArrayList<Actividad> listaActividades;
-    Context context;
-
-
-    public static class ViewHolder extends RecyclerView.ViewHolder{
-
-        private final ImageView imageView;
-        private final TextView nombreActividad;
-        private final TextView horaActividad;
-        private final TextView descripcionActividad;
-        private final Button editarBtn;
-        private final Button eliminarBtn;
-
-
-        public ViewHolder(View view){
-            super(view);
-            imageView = (ImageView) view.findViewById(R.id.imagenAct);
-            nombreActividad = (TextView) view.findViewById(R.id.nombreAct_tv);
-            horaActividad = (TextView) view.findViewById(R.id.horaAct_tv);
-            descripcionActividad = (TextView) view.findViewById(R.id.descripcionAct_tv);
-            editarBtn = (Button) view.findViewById(R.id.editar_btn);
-            eliminarBtn = (Button) view.findViewById(R.id.eliminar_btn);
-        }
-        public TextView getTextView(){
-            return getTextView();
-        }
-
-    }
 
     public ActividadAdapter(ArrayList<Actividad> dataSet){
         listaActividades=dataSet;
@@ -62,23 +33,51 @@ public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.View
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Actividad actividad = listaActividades.get(position);
-
+        holder.actividad = actividad;
         String urlImage = actividad.getImagenUrl();
         String mostrarNombre = actividad.getTitulo();
         String mostrarHorario = "Fecha: "+ actividad.getFecha() + " Hora: " + actividad.getHoraInicio()+"-"+actividad.getHoraFin();
         String mostrarDescri = actividad.getDescripcion();
-
-
-        ImageView imageView = holder.imageView.findViewById(R.id.imagenAct);
-        TextView nombreActividad = holder.itemView.findViewById(R.id.nombreAct_tv);
-        TextView horaActividad = holder.itemView.findViewById(R.id.horaAct_tv);
-        TextView descripcionActividad = holder.itemView.findViewById(R.id.descripcionAct_tv);
-
+        ImageView imageView = holder.imageView;
+        TextView nombreActividad = holder.nombreActividad;
+        TextView horaActividad = holder.horaActividad;
+        TextView descripcionActividad = holder.descripcionActividad;
         nombreActividad.setText(mostrarNombre);
         horaActividad.setText(mostrarHorario);
         descripcionActividad.setText(mostrarDescri);
-
         Glide.with(imageView).load(urlImage).into(imageView);
+
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder{
+
+        Actividad actividad;
+        private final ImageView imageView;
+        private final TextView nombreActividad;
+        private final TextView horaActividad;
+        private final TextView descripcionActividad;
+        private final Button editarBtn;
+        private final Button eliminarBtn;
+
+
+        public ViewHolder(View view){
+            super(view);
+            imageView = (ImageView) view.findViewById(R.id.imagenAct);
+            nombreActividad = (TextView) view.findViewById(R.id.nombreAct_tv);
+            horaActividad = (TextView) view.findViewById(R.id.horaAct_tv);
+            descripcionActividad = (TextView) view.findViewById(R.id.descripcionAct_tv);
+            editarBtn = (Button) view.findViewById(R.id.editar_btn);
+            editarBtn.setOnClickListener(view1 -> {
+                Intent intent = new Intent(view1.getContext(),InsertarActivity.class);
+                intent.putExtra("activity", actividad);
+                view1.getContext().startActivity(intent);
+            });
+            eliminarBtn = (Button) view.findViewById(R.id.eliminar_btn);
+        }
+
+        public TextView getTextView(){
+            return getTextView();
+        }
 
     }
 

@@ -58,9 +58,11 @@ public class InsertarActivity extends AppCompatActivity {
     EditText etHorafin;
     ImageView imageView;
     Button btnCrear;
-
+    Button btnSubirFoto;
     LocalTime timeInicio;
     LocalTime timeFin;
+    EditText titulo ;
+    EditText descripcion ;
     LocalDate selectedLocalDate;
     String imageUrl;
 
@@ -68,10 +70,30 @@ public class InsertarActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_insertar);
+        Intent intent = getIntent();
+        boolean updated = intent.hasExtra("activity");
         firebaseDatabase = FirebaseDatabase.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         storageRef = FirebaseStorage.getInstance().getReference().child(firebaseAuth.getCurrentUser().getUid());
+        etFecha = findViewById(R.id.editTextDate);
+        etHorainicio = findViewById(R.id.editTextHoraInicio);
+        etHorafin = findViewById(R.id.editTextHoraFin);
+        imageView = findViewById(R.id.ivInsertar);
+        btnCrear = findViewById(R.id.btnCrearActividad);
+        btnSubirFoto = findViewById(R.id.btnSubirImagen);
+        titulo = findViewById(R.id.editTextTitulo);
+        descripcion = findViewById(R.id.editTextDescripcion);
 
+        if(updated){
+            actividad = (Actividad) intent.getSerializableExtra("actividad");
+            btnCrear.setText("Actualizar actividad");
+            btnSubirFoto.setText("Actualizar Foto");
+            etFecha.setText(actividad.getFecha());
+            etHorafin.setText(actividad.getHoraFin());
+            etHorainicio.setText(actividad.getHoraInicio());
+            descripcion.setText(actividad.getDescripcion());
+            titulo.setText(actividad.getTitulo());
+        }
 
         MaterialTimePicker pickerHoraInicio = new MaterialTimePicker.Builder().setTimeFormat(TimeFormat.CLOCK_12H)
                 .setHour(6)
@@ -145,14 +167,9 @@ public class InsertarActivity extends AppCompatActivity {
             }
             etHorafin.setText(timeFin.format(timeFormatter));
             actividad.setHoraFin(timeFin.format(timeFormatter));
-            btnCrear = findViewById(R.id.btnCrearActividad);
             btnCrear.setEnabled(true);
         });
 
-        etFecha = findViewById(R.id.editTextDate);
-        etHorainicio = findViewById(R.id.editTextHoraInicio);
-        etHorafin = findViewById(R.id.editTextHoraFin);
-        imageView = findViewById(R.id.ivInsertar);
         etFecha.setOnClickListener(view -> showDatePickerDialog());
         etHorainicio.setOnClickListener(view -> {
             if(etFecha.getText().toString().isEmpty()){
@@ -245,25 +262,31 @@ public class InsertarActivity extends AppCompatActivity {
     }
 
     public void crearActividad(View view){
-
-        EditText titulo = findViewById(R.id.editTextTitulo);
-        EditText descripcion = findViewById(R.id.editTextDescripcion);
-
-        String tituloString  =  titulo.getText().toString();
-        String descripcionString = descripcion.getText().toString();
-
-        actividad.setTitulo(tituloString);
-        actividad.setDescripcion(descripcionString);
-
         String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        Log.d("user",user);
-        String i = "1";
         DatabaseReference databaseReference = firebaseDatabase.getReference().child(user).child("actividades");
-        databaseReference.child(actividad.getTitulo()).setValue(actividad);
+        Intent intent = getIntent();
+        boolean updated = intent.hasExtra("activity");
+        if(updated){
+            databaseReference.child(actividad.getTitulo()).child("descripcion").setValue(descripcion.getText().toString());
+            databaseReference.child(actividad.getTitulo()).child("fecha").setValue(etFecha.getText().toString());
+            databaseReference.child(actividad.getTitulo()).child("horaFin").setValue(etHorafin.getText().toString());
+            databaseReference.child(actividad.getTitulo()).child("horaInicio").setValue(etHorainicio.getText().toString());
+            databaseReference.child(actividad.getTitulo()).child("imagenURL").setValue(imageUrl!=null?imageUrl:actividad.getImagenUrl());
+            databaseReference.child(actividad.getTitulo()).setValue(titulo.getText().toString());
+            Toast.makeText(InsertarActivity.this, "Actividad actualizada correctamente", Toast.LENGTH_SHORT).show();
+        }else{
+            String tituloString  =  titulo.getText().toString();
+            String descripcionString = descripcion.getText().toString();
+
+            actividad.setTitulo(tituloString);
+            actividad.setDescripcion(descripcionString);
+            Log.d("user",user);
+            String i = "1";
+            databaseReference.child(actividad.getTitulo()).setValue(actividad);
+            Toast.makeText(InsertarActivity.this, "Actividad creada exitosamente", Toast.LENGTH_SHORT).show();
+        }
         startActivity(new Intent(InsertarActivity.this, AgendaActivity.class));
         finish();
-
-
 
     }
 }
