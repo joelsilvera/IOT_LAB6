@@ -70,6 +70,9 @@
                 android:layout_height="48dp"
                 android:layout_marginEnd="4dp"
                 android:layout_weight="1"
+                android:maxLines="1"
+                android:focusable="false"
+                android:clickable="true"
                 android:ems="10"
                 android:hint="Hora Inicio"
                 android:inputType="time" />
@@ -80,6 +83,9 @@
                 android:layout_height="48dp"
                 android:layout_marginStart="4dp"
                 android:layout_weight="1"
+                android:maxLines="1"
+                android:focusable="false"
+                android:clickable="true"
                 android:ems="10"
                 android:hint="Hora Fin"
                 android:inputType="time" />
@@ -96,7 +102,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout"/>
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/ivInsertar"
             android:scaleType="centerCrop"
             android:layout_width="0dp"
             android:layout_height="221dp"
@@ -108,13 +114,14 @@
             app:srcCompat="@drawable/placeholder_image" />
         <Button
             android:layout_marginTop="16dp"
-            android:id="@+id/btnSubirFoto"
+            android:onClick="subirImagen"
+            android:id="@+id/btnSubirImagen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Subir foto"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView2"/>
+            app:layout_constraintTop_toBottomOf="@+id/ivInsertar"/>
 
         <Button
             android:enabled="false"
@@ -127,6 +134,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnSubirFoto" />
+            app:layout_constraintTop_toBottomOf="@+id/btnSubirImagen" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
