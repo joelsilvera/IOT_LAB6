@@ -85,7 +85,7 @@ public class InsertarActivity extends AppCompatActivity {
         descripcion = findViewById(R.id.editTextDescripcion);
 
         if(updated){
-            actividad = (Actividad) intent.getSerializableExtra("actividad");
+            actividad = (Actividad) intent.getSerializableExtra("activity");
             btnCrear.setText("Actualizar actividad");
             btnSubirFoto.setText("Actualizar Foto");
             etFecha.setText(actividad.getFecha());
@@ -93,6 +93,7 @@ public class InsertarActivity extends AppCompatActivity {
             etHorainicio.setText(actividad.getHoraInicio());
             descripcion.setText(actividad.getDescripcion());
             titulo.setText(actividad.getTitulo());
+            Glide.with(InsertarActivity.this).load(actividad.getImagenUrl()).into(imageView);
         }
 
         MaterialTimePicker pickerHoraInicio = new MaterialTimePicker.Builder().setTimeFormat(TimeFormat.CLOCK_12H)

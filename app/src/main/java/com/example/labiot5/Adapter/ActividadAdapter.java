@@ -24,8 +24,6 @@ public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.View
 
     private ArrayList<Actividad> listaActividades;
     FirebaseDatabase firebaseDatabase;
-    String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
-    DatabaseReference databaseReference = firebaseDatabase.getReference().child(user).child("actividades");
 
     public ActividadAdapter(ArrayList<Actividad> dataSet){
         listaActividades=dataSet;
@@ -85,7 +83,10 @@ public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.View
             eliminarBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    databaseReference.child("actividades").child(actividad.getTitulo()).removeValue().addOnCompleteListener(task -> {
+                    String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    firebaseDatabase = FirebaseDatabase.getInstance();
+                    DatabaseReference databaseReference = firebaseDatabase.getReference().child(user).child("actividades");
+                    databaseReference.child(actividad.getTitulo()).removeValue().addOnCompleteListener(task -> {
                         if(task.isSuccessful()){
                             Toast.makeText(view.getContext(), "Actividad eliminada con éxito", Toast.LENGTH_SHORT).show();
                         }else{
