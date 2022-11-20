@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,11 +15,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.labiot5.Adapter.ActividadAdapter;
 import com.example.labiot5.Entity.Actividad;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -29,15 +34,27 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 
 public class AgendaActivity extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase;
+    DatabaseReference ref;
+    ProgressBar progressBar;
+    LinearLayout emptyView;
+
+    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
+    DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
 
     private LocalDate filtroFechaInicio = LocalDate.now();
     private LocalDate filtroFechaFin = LocalDate.now();
     private LocalTime filtroHoraInicio = LocalTime.of(6,0);
     private LocalTime filtroHoraFin = LocalTime.of(11,30);
+
+    private List<Actividad> firebaseActividades = new ArrayList<>();
+    private ArrayList<Actividad> actividadesFiltradas = new ArrayList<>();
+    ActividadAdapter actividadAdapter;
 
     private ModalBottomSheet modalBottomSheet = new ModalBottomSheet();
 
@@ -72,30 +89,96 @@ public class AgendaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agenda);
         setTitle("Mi agenda");
-        ArrayList<Actividad> listaActividades = new ArrayList<>();
 
-        Actividad actividad1 = new Actividad("Prueba1","Hiiiiiiiiiiiiiii","https://lh5.googleusercontent.com/proxy/SVUzogS-EV4t9SPFU3dqJEOWXn5qV3WGXXV2dECHSXs4-pxtXq8HVKhiofRnIj-3ufx1wL2u-n8_fwbM-7foct9-okXwasW1gmfmyw5a0EqbsrDdAzoyZ2QFnGTTPniIhYJYAvUrCBBgL2Wy41V1jomWzOUY7REinVBtynTa0HEqH41Co4_013M-70KQhP_KIh5rBfHI44K3eA=w1200-h630-p-k-no-nu","21/12/2022","8:00","9:00");
-        Actividad actividad2 = new Actividad("Prueba2","Hiiiiiiiiiiiiiii","https://lh5.googleusercontent.com/proxy/SVUzogS-EV4t9SPFU3dqJEOWXn5qV3WGXXV2dECHSXs4-pxtXq8HVKhiofRnIj-3ufx1wL2u-n8_fwbM-7foct9-okXwasW1gmfmyw5a0EqbsrDdAzoyZ2QFnGTTPniIhYJYAvUrCBBgL2Wy41V1jomWzOUY7REinVBtynTa0HEqH41Co4_013M-70KQhP_KIh5rBfHI44K3eA=w1200-h630-p-k-no-nu","21/12/2022","8:00","9:00");
-        Actividad actividad3 = new Actividad("Prueba3","Hiiiiiiiiiiiiiii","https://lh5.googleusercontent.com/proxy/SVUzogS-EV4t9SPFU3dqJEOWXn5qV3WGXXV2dECHSXs4-pxtXq8HVKhiofRnIj-3ufx1wL2u-n8_fwbM-7foct9-okXwasW1gmfmyw5a0EqbsrDdAzoyZ2QFnGTTPniIhYJYAvUrCBBgL2Wy41V1jomWzOUY7REinVBtynTa0HEqH41Co4_013M-70KQhP_KIh5rBfHI44K3eA=w1200-h630-p-k-no-nu","21/12/2022","8:00","9:00");
-
-
-        listaActividades.add(actividad1);
-        listaActividades.add(actividad2);
-        listaActividades.add(actividad3);
+        progressBar = findViewById(R.id.pbAgenda);
+        emptyView = findViewById(R.id.llEmptyView);
 
         RecyclerView recyclerView = findViewById(R.id.recyclerViewAct);
-        ActividadAdapter actividadAdapter = new ActividadAdapter(listaActividades);
+        actividadAdapter = new ActividadAdapter(actividadesFiltradas);
         recyclerView.setAdapter(actividadAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(AgendaActivity.this));
 
         firebaseDatabase = FirebaseDatabase.getInstance();
 
-        DatabaseReference ref = firebaseDatabase.getReference().child("actividad");
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        ref = firebaseDatabase.getReference().child(FirebaseAuth.getInstance().getUid()).child("actividades");
+    }
 
+    @Override
+    protected void onResume() {
+        cargarDatosdeFirebase();
+        super.onResume();
     }
 
     public void goToInsertarActivity(View view){
         startActivity(new Intent(AgendaActivity.this, InsertarActivity.class));
     }
 
+    public void filtrarActividades(){
+        actividadesFiltradas.clear();
+        LocalDate fechaActividad;
+        LocalTime horaInicioActividad;
+        LocalTime horaFinActividad;
+        for (Actividad a : firebaseActividades){
+            fechaActividad = LocalDate.parse(a.getFecha(),dateFormatter);
+            horaInicioActividad = LocalTime.parse(a.getHoraInicio(),timeFormatter);
+            horaFinActividad = LocalTime.parse(a.getHoraFin(),timeFormatter);
+            if(fechaActividad.isEqual(filtroFechaInicio) && !horaInicioActividad.isBefore(filtroHoraInicio)){
+                actividadesFiltradas.add(a);
+                Log.d("msg", a.getTitulo());
+            } else if(fechaActividad.isAfter(filtroFechaInicio) && fechaActividad.isBefore(filtroFechaFin)){
+                actividadesFiltradas.add(a);
+                Log.d("msg", a.getTitulo());
+            } else if(!filtroFechaFin.isEqual(filtroFechaInicio) && fechaActividad.isEqual(filtroFechaFin) && !horaFinActividad.isAfter(filtroHoraFin)){
+                actividadesFiltradas.add(a);
+                Log.d("msg", a.getTitulo());
+            }
+        }
+        actividadAdapter.notifyDataSetChanged();
+        if(actividadesFiltradas.isEmpty()){
+            emptyView.setVisibility(View.VISIBLE);
+            ((TextView) emptyView.findViewById(R.id.tvMensajeEmpty)).setText("No hay actividades entre "+filtroFechaInicio.format(dateFormatter)+ " "+
+                    filtroHoraInicio.format(timeFormatter)+ " y "+filtroFechaFin.format(dateFormatter)+ " "+ filtroHoraFin.format(timeFormatter));
+        }else{
+            emptyView.setVisibility(View.GONE);
+        }
+    }
+
+    public void cargando(){
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    public void terminarCargando(){
+        progressBar.setVisibility(View.GONE);
+    }
+
+
+    public void cargarDatosdeFirebase(){
+        emptyView.setVisibility(View.GONE);
+        cargando();
+        firebaseActividades.clear();
+        ref.get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
+            @Override
+            public void onSuccess(DataSnapshot dataSnapshot) {
+                terminarCargando();
+                for (DataSnapshot d : dataSnapshot.getChildren()){
+                    firebaseActividades.add(d.getValue(Actividad.class));
+                }
+                filtrarActividades();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                terminarCargando();
+                Toast.makeText(AgendaActivity.this, "No se pudo establecer conexión", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void setFilters(LocalDate filtroFechaInicio, LocalDate filtroFechaFin, LocalTime filtroHoraInicio, LocalTime filtroHoraFin){
+        this.filtroFechaInicio = filtroFechaInicio;
+        this.filtroFechaFin = filtroFechaFin;
+        this.filtroHoraInicio = filtroHoraInicio;
+        this.filtroHoraFin = filtroHoraFin;
+    }
 }
