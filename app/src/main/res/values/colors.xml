@@ -38,4 +38,12 @@
     <color name="md_theme_light_surfaceTint">#A82D68</color>
     <color name="md_theme_light_outlineVariant">#D5C2C6</color>
     <color name="md_theme_light_scrim">#000000</color>
+
+    //onboarding colors
+    <color name="background">#F0F4F3</color>
+    <color name="buttontext">#A82D68</color>
+
+    //para indict estado color
+    <color name="inactive">#C4C4C4</color>
+    <color name="active">#A82D68</color>
 </resources>
