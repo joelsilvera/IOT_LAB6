@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -25,6 +26,12 @@ public class AgendaActivity extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase;
     boolean primeraVez = true;
     int i;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.menu_main,menu);
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,9 +90,12 @@ public class AgendaActivity extends AppCompatActivity {
             }
         });
 
+
     }
 
     public void goToInsertarActivity(View view){
         startActivity(new Intent(AgendaActivity.this, InsertarActivity.class));
     }
+
+
 }
