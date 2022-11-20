@@ -55,7 +55,7 @@ public class AgendaActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.filterMenu:
                 Log.d("msg", "llevarlo a filtros");
-                modalBottomSheet.show(getSupportFragmentManager(), modalBottomSheet.TAG);
+                modalBottomSheet.show(getSupportFragmentManager(), modalBottomSheet.getTag());
                 return true;
             case R.id.logoutMenu:
                 FirebaseAuth.getInstance().signOut();
@@ -97,21 +97,5 @@ public class AgendaActivity extends AppCompatActivity {
     public void goToInsertarActivity(View view){
         startActivity(new Intent(AgendaActivity.this, InsertarActivity.class));
     }
-
-    public static class ModalBottomSheet extends BottomSheetDialogFragment {
-        @Nullable
-        @Override
-        public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.bottom_sheet_filter, container, false);
-            view.findViewById(R.id.bottomsheet_button).setOnClickListener(v -> {
-                Toast.makeText(getActivity(), "Aca deberían setearse los filtros", Toast.LENGTH_SHORT).show();
-                dismiss();
-            });
-            return view;
-        }
-
-        public String TAG = "ModalBottomSheet";
-    }
-
 
 }

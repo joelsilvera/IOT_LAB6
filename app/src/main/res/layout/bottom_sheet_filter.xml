@@ -15,23 +15,89 @@
 
     <!-- Bottom sheet contents. -->
     <TextView
+        android:textSize="20sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="title"/>
+        android:text="Filtros"
+        android:layout_marginBottom="16dp"/>
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="supporting_text"/>
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginBottom="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextDate">
 
+        <EditText
+            android:id="@+id/etBottomSheetFechaInicio"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="1"
+            android:maxLines="1"
+            android:focusable="false"
+            android:clickable="true"
+            android:ems="10"
+            android:hint="Fecha Inicio"
+            android:inputType="time" />
+
+        <EditText
+            android:id="@+id/etBottomSheetFechaFin"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginStart="4dp"
+            android:layout_weight="1"
+            android:maxLines="1"
+            android:focusable="false"
+            android:clickable="true"
+            android:ems="10"
+            android:hint="Fecha Fin"
+            android:inputType="time" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginBottom="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextDate">
+
+        <EditText
+            android:id="@+id/etBottomSheetHoraInicio"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:ems="10"
+            android:focusable="false"
+            android:hint="Hora Inicio"
+            android:inputType="time"
+            android:maxLines="1" />
+
+        <EditText
+            android:id="@+id/etBottomSheetHoraFin"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginStart="4dp"
+            android:layout_weight="1"
+            android:maxLines="1"
+            android:focusable="false"
+            android:clickable="true"
+            android:ems="10"
+            android:hint="Hora Fin"
+            android:inputType="time" />
+    </LinearLayout>
     <Button
         android:id="@+id/bottomsheet_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="action"/>
+        android:layout_marginBottom="16dp"
+        android:text="Aplicar filtros"/>
 
-    <com.google.android.material.switchmaterial.SwitchMaterial
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="switch_label"/>
 </LinearLayout>
