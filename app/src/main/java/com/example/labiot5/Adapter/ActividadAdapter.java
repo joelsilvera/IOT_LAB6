@@ -6,17 +6,26 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.labiot5.Entity.Actividad;
 import com.example.labiot5.InsertarActivity;
 import com.example.labiot5.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 
 public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.ViewHolder> {
 
     private ArrayList<Actividad> listaActividades;
+    FirebaseDatabase firebaseDatabase;
+    String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    DatabaseReference databaseReference = firebaseDatabase.getReference().child(user).child("actividades");
 
     public ActividadAdapter(ArrayList<Actividad> dataSet){
         listaActividades=dataSet;
@@ -73,6 +82,18 @@ public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.View
                 view1.getContext().startActivity(intent);
             });
             eliminarBtn = (Button) view.findViewById(R.id.eliminar_btn);
+            eliminarBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    databaseReference.child("actividades").child(actividad.getTitulo()).removeValue().addOnCompleteListener(task -> {
+                        if(task.isSuccessful()){
+                            Toast.makeText(view.getContext(), "Actividad eliminada con éxito", Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(view.getContext(), "Ha ocurrido un error al eliminar la actividad", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            });
         }
 
         public TextView getTextView(){
