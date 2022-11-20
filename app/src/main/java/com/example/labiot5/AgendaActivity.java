@@ -6,14 +6,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.labiot5.Adapter.ActividadAdapter;
 import com.example.labiot5.Entity.Actividad;
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -21,6 +28,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class AgendaActivity extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase;
@@ -33,6 +41,7 @@ public class AgendaActivity extends AppCompatActivity {
         return true;
     }
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,13 +98,22 @@ public class AgendaActivity extends AppCompatActivity {
 
             }
         });
-
-
     }
 
     public void goToInsertarActivity(View view){
         startActivity(new Intent(AgendaActivity.this, InsertarActivity.class));
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem menuItem) {
+        switch (menuItem.getItemId()){
+            case R.id.logout:
+                FirebaseAuth.getInstance().signOut();
+                Toast.makeText(AgendaActivity.this, "Has cerrado sesión", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(AgendaActivity.this,MainActivity.class));
+                return true;
+        }
+        return onOptionsItemSelected(menuItem);
+    }
 
 }

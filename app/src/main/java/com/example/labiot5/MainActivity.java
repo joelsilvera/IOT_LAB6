@@ -59,6 +59,10 @@ public class MainActivity extends AppCompatActivity {
                                 new AuthUI.IdpConfig.EmailBuilder().build(),
                                 new AuthUI.IdpConfig.GoogleBuilder().build()
                         ))
+                        .setTosAndPrivacyPolicyUrls(
+                                "https://example.com/terms.html",
+                                "https://example.com/privacy.html")
+                        .setLogo(R.drawable.agenda)
                         .build();
                 activityResultLauncher.launch(fbIntent);
             }
