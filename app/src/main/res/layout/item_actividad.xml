@@ -13,10 +13,11 @@
         android:orientation="vertical">
 
         <ImageView
+            android:id="@+id/imagenAct"
             android:layout_width="match_parent"
             android:layout_height="194dp"
-            android:src="@color/cardview_dark_background"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop"
+            android:src="@color/cardview_dark_background" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -25,11 +26,14 @@
             android:padding="16dp">
             <!-- Title, secondary and supporting text -->
             <TextView
+                android:id="@+id/nombreAct_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Nombre de la actividad"
                 android:textAppearance="?attr/textAppearanceTitleMedium" />
+
             <TextView
+                android:id="@+id/horaAct_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -37,6 +41,7 @@
                 android:textAppearance="?attr/textAppearanceBodyMedium"
                 android:textColor="?android:attr/textColorSecondary" />
             <TextView
+                android:id="@+id/descripcionAct_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -51,17 +56,21 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:orientation="horizontal">
+
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/editar_btn"
+                style="?attr/borderlessButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:text="Editar"
-                style="?attr/borderlessButtonStyle" />
+                android:text="Editar" />
+
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/eliminar_btn"
+                style="?attr/borderlessButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Eliminar"
-                style="?attr/borderlessButtonStyle" />
+                android:text="Eliminar" />
         </LinearLayout>
 
     </LinearLayout>
