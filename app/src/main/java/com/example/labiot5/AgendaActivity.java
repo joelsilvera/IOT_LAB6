@@ -94,7 +94,7 @@ public class AgendaActivity extends AppCompatActivity {
         emptyView = findViewById(R.id.llEmptyView);
 
         RecyclerView recyclerView = findViewById(R.id.recyclerViewAct);
-        actividadAdapter = new ActividadAdapter(actividadesFiltradas);
+        actividadAdapter = new ActividadAdapter(this,actividadesFiltradas);
         recyclerView.setAdapter(actividadAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(AgendaActivity.this));
 

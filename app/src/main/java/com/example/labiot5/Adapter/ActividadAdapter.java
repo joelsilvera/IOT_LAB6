@@ -1,4 +1,5 @@
 package com.example.labiot5.Adapter;
+import android.app.Activity;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
+import com.example.labiot5.AgendaActivity;
 import com.example.labiot5.Entity.Actividad;
 import com.example.labiot5.InsertarActivity;
 import com.example.labiot5.R;
@@ -24,8 +26,9 @@ public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.View
 
     private ArrayList<Actividad> listaActividades;
     FirebaseDatabase firebaseDatabase;
-
-    public ActividadAdapter(ArrayList<Actividad> dataSet){
+    private Activity activity;
+    public ActividadAdapter(Activity actividad, ArrayList<Actividad> dataSet){
+        activity = actividad;
         listaActividades=dataSet;
     }
 
@@ -86,13 +89,14 @@ public class ActividadAdapter extends RecyclerView.Adapter<ActividadAdapter.View
                     String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
                     firebaseDatabase = FirebaseDatabase.getInstance();
                     DatabaseReference databaseReference = firebaseDatabase.getReference().child(user).child("actividades");
-                    databaseReference.child(actividad.getTitulo()).removeValue().addOnCompleteListener(task -> {
+                    databaseReference.child(actividad.getKey()).removeValue().addOnCompleteListener(task -> {
                         if(task.isSuccessful()){
                             Toast.makeText(view.getContext(), "Actividad eliminada con éxito", Toast.LENGTH_SHORT).show();
                         }else{
                             Toast.makeText(view.getContext(), "Ha ocurrido un error al eliminar la actividad", Toast.LENGTH_SHORT).show();
                         }
                     });
+                    ((AgendaActivity) activity).cargarDatosdeFirebase();
                 }
             });
         }

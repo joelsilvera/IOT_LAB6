@@ -96,8 +96,8 @@ public class InsertarActivity extends AppCompatActivity {
 
         if(updated){
             actividad = (Actividad) intent.getSerializableExtra("activity");
-            LocalTime horaInicioL = LocalTime.parse(actividad.getHoraInicio(),timeFormatter);
-            LocalTime horaFinL = LocalTime.parse(actividad.getHoraFin(),timeFormatter);
+            timeInicio = LocalTime.parse(actividad.getHoraInicio(),timeFormatter);
+            timeFin = LocalTime.parse(actividad.getHoraFin(),timeFormatter);
             btnCrear.setText("Actualizar actividad");
             btnSubirFoto.setText("Actualizar Foto");
             etFecha.setText(actividad.getFecha());
@@ -108,10 +108,10 @@ public class InsertarActivity extends AppCompatActivity {
             updatedTitulo = actividad.getTitulo();
             Glide.with(InsertarActivity.this).load(actividad.getImagenUrl()).into(imageView);
             btnCrear.setEnabled(true);
-            horaInicio = horaInicioL.getHour();
-            horaFin= horaFinL.getHour();
-            minutoInicio = horaInicioL.getMinute();
-            minutoFin = horaFinL.getMinute();
+            horaInicio = timeInicio.getHour();
+            horaFin= timeFin.getHour();
+            minutoInicio = timeInicio.getMinute();
+            minutoFin = timeFin.getMinute();
             selectedLocalDate = LocalDate.parse(actividad.getFecha(),dateFormatter);
         }
 
@@ -196,14 +196,16 @@ public class InsertarActivity extends AppCompatActivity {
                 public void onSuccess(DataSnapshot dataSnapshot) {
                     for(DataSnapshot d : dataSnapshot.getChildren() ){
                         if(d.getValue(Actividad.class).getFecha().equals(etFecha.getText().toString())){
-                            listaActividades.add(d.getValue(Actividad.class));
+                            Actividad actividad = d.getValue(Actividad.class);
+                            actividad.setKey(d.getKey());
+                            listaActividades.add(actividad);
                         }
                     }
                     if(!listaActividades.isEmpty()){
-                        for(Actividad actividad: listaActividades){
-                            if(!actividad.getTitulo().equals(titulo.getText().toString())){
-                                horaInbase = LocalTime.parse(actividad.getHoraInicio(),timeFormatter);
-                                horaFinbase = LocalTime.parse(actividad.getHoraFin(),timeFormatter);
+                        for(Actividad activity: listaActividades){
+                            if(!actividad.getKey().equals(activity.getKey())){
+                                horaInbase = LocalTime.parse(activity.getHoraInicio(),timeFormatter);
+                                horaFinbase = LocalTime.parse(activity.getHoraFin(),timeFormatter);
                                 if((timeInicio.isBefore(horaInbase) && timeFin.isBefore(horaInbase)) || timeInicio.isAfter(horaFinbase) && timeFin.isAfter(horaFinbase)){
                                     btnCrear.setEnabled(true);
                                     mensaje.setText("El horario esta dispobible");
@@ -326,6 +328,10 @@ public class InsertarActivity extends AppCompatActivity {
         boolean updated = intent.hasExtra("activity");
         String tituloString  =  titulo.getText().toString();
         String descripcionString = descripcion.getText().toString();
+        if(tituloString.isEmpty() || descripcionString.isEmpty()){
+            Toast.makeText(InsertarActivity.this, "Ni el título ni la descripción pueden ser vacíos", Toast.LENGTH_SHORT).show();
+            return;
+        }
         actividad.setTitulo(tituloString);
         actividad.setDescripcion(descripcionString);
         if(updated){
