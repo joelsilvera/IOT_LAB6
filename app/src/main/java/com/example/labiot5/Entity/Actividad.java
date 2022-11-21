@@ -1,8 +1,13 @@
 package com.example.labiot5.Entity;
 
+import com.google.firebase.database.Exclude;
+
 import java.io.Serializable;
 
 public class Actividad implements Serializable {
+
+    @Exclude
+    private String key;
     private String titulo;
     private String descripcion;
     private String imagenUrl;
@@ -69,4 +74,13 @@ public class Actividad implements Serializable {
     public void setHoraFin(String horaFin) {
         this.horaFin = horaFin;
     }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
 }

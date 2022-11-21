@@ -65,6 +65,11 @@ public class InsertarActivity extends AppCompatActivity {
     EditText descripcion ;
     LocalDate selectedLocalDate;
     String imageUrl;
+    String updatedTitulo;
+    Integer horaInicio = 6;
+    Integer horaFin = 23;
+    Integer minutoInicio = 0;
+    Integer minutoFin = 30;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +91,8 @@ public class InsertarActivity extends AppCompatActivity {
 
         if(updated){
             actividad = (Actividad) intent.getSerializableExtra("activity");
+            LocalTime horaInicioL = LocalTime.parse(actividad.getHoraInicio(),timeFormatter);
+            LocalTime horaFinL = LocalTime.parse(actividad.getHoraFin(),timeFormatter);
             btnCrear.setText("Actualizar actividad");
             btnSubirFoto.setText("Actualizar Foto");
             etFecha.setText(actividad.getFecha());
@@ -93,12 +100,19 @@ public class InsertarActivity extends AppCompatActivity {
             etHorainicio.setText(actividad.getHoraInicio());
             descripcion.setText(actividad.getDescripcion());
             titulo.setText(actividad.getTitulo());
+            updatedTitulo = actividad.getTitulo();
             Glide.with(InsertarActivity.this).load(actividad.getImagenUrl()).into(imageView);
+            btnCrear.setEnabled(true);
+            horaInicio = horaInicioL.getHour();
+            horaFin= horaFinL.getHour();
+            minutoInicio = horaInicioL.getMinute();
+            minutoFin = horaFinL.getMinute();
+            selectedLocalDate = LocalDate.parse(actividad.getFecha(),dateFormatter);
         }
 
         MaterialTimePicker pickerHoraInicio = new MaterialTimePicker.Builder().setTimeFormat(TimeFormat.CLOCK_12H)
-                .setHour(6)
-                .setMinute(0)
+                .setHour(horaInicio)
+                .setMinute(minutoInicio)
                 .setTitleText("Selecciona la hora de inicio")
                 .build();
         pickerHoraInicio.addOnCancelListener(dialogInterface -> {
@@ -134,8 +148,8 @@ public class InsertarActivity extends AppCompatActivity {
         });
 
         MaterialTimePicker pickerHoraFin= new MaterialTimePicker.Builder().setTimeFormat(TimeFormat.CLOCK_12H)
-                .setHour(23)
-                .setMinute(30)
+                .setHour(horaFin)
+                .setMinute(minutoFin)
                 .setTitleText("Selecciona la hora de fin")
                 .build();
         pickerHoraFin.addOnCancelListener(dialogInterface -> {
@@ -188,6 +202,7 @@ public class InsertarActivity extends AppCompatActivity {
             }
             pickerHoraFin.show(getSupportFragmentManager(),"HoraFin");
         });
+
 
     }
 
@@ -267,23 +282,17 @@ public class InsertarActivity extends AppCompatActivity {
         DatabaseReference databaseReference = firebaseDatabase.getReference().child(user).child("actividades");
         Intent intent = getIntent();
         boolean updated = intent.hasExtra("activity");
+        String tituloString  =  titulo.getText().toString();
+        String descripcionString = descripcion.getText().toString();
+        actividad.setTitulo(tituloString);
+        actividad.setDescripcion(descripcionString);
         if(updated){
-            databaseReference.child(actividad.getTitulo()).child("descripcion").setValue(descripcion.getText().toString());
-            databaseReference.child(actividad.getTitulo()).child("fecha").setValue(etFecha.getText().toString());
-            databaseReference.child(actividad.getTitulo()).child("horaFin").setValue(etHorafin.getText().toString());
-            databaseReference.child(actividad.getTitulo()).child("horaInicio").setValue(etHorainicio.getText().toString());
-            databaseReference.child(actividad.getTitulo()).child("imagenURL").setValue(imageUrl!=null?imageUrl:actividad.getImagenUrl());
-            databaseReference.child(actividad.getTitulo()).setValue(titulo.getText().toString());
+            databaseReference.child(actividad.getKey()).setValue(actividad);
             Toast.makeText(InsertarActivity.this, "Actividad actualizada correctamente", Toast.LENGTH_SHORT).show();
         }else{
-            String tituloString  =  titulo.getText().toString();
-            String descripcionString = descripcion.getText().toString();
-
-            actividad.setTitulo(tituloString);
-            actividad.setDescripcion(descripcionString);
             Log.d("user",user);
             String i = "1";
-            databaseReference.child(actividad.getTitulo()).setValue(actividad);
+            databaseReference.push().setValue(actividad);
             Toast.makeText(InsertarActivity.this, "Actividad creada exitosamente", Toast.LENGTH_SHORT).show();
         }
         startActivity(new Intent(InsertarActivity.this, AgendaActivity.class));

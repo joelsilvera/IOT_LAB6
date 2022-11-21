@@ -162,7 +162,9 @@ public class AgendaActivity extends AppCompatActivity {
             public void onSuccess(DataSnapshot dataSnapshot) {
                 terminarCargando();
                 for (DataSnapshot d : dataSnapshot.getChildren()){
-                    firebaseActividades.add(d.getValue(Actividad.class));
+                    Actividad actividad = d.getValue(Actividad.class);
+                    actividad.setKey(d.getKey());
+                    firebaseActividades.add(actividad);
                 }
                 filtrarActividades();
             }
