@@ -16,7 +16,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TimePicker;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -36,7 +36,7 @@ import com.google.firebase.storage.UploadTask;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 public class InsertarActivity extends AppCompatActivity {
@@ -45,7 +45,7 @@ public class InsertarActivity extends AppCompatActivity {
     StorageReference storageRef;
     FirebaseDatabase firebaseDatabase;
     Actividad actividad = new Actividad();
-    List<Actividad> listaActividades ;
+    List<Actividad> listaActividades = new ArrayList<>();
 
     DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
     DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
@@ -58,6 +58,8 @@ public class InsertarActivity extends AppCompatActivity {
     EditText etHorafin;
     ImageView imageView;
     Button btnCrear;
+    TextView mensaje;
+    EditText titulo;
     Button btnSubirFoto;
     LocalTime timeInicio;
     LocalTime timeFin;
@@ -65,6 +67,8 @@ public class InsertarActivity extends AppCompatActivity {
     EditText descripcion ;
     LocalDate selectedLocalDate;
     String imageUrl;
+    LocalTime horaInbase;
+    LocalTime horaFinbase;
     String updatedTitulo;
     Integer horaInicio = 6;
     Integer horaFin = 23;
@@ -88,6 +92,7 @@ public class InsertarActivity extends AppCompatActivity {
         btnSubirFoto = findViewById(R.id.btnSubirImagen);
         titulo = findViewById(R.id.editTextTitulo);
         descripcion = findViewById(R.id.editTextDescripcion);
+        mensaje = findViewById(R.id.textViewMensaje);
 
         if(updated){
             actividad = (Actividad) intent.getSerializableExtra("activity");
@@ -182,8 +187,46 @@ public class InsertarActivity extends AppCompatActivity {
             }
             etHorafin.setText(timeFin.format(timeFormatter));
             actividad.setHoraFin(timeFin.format(timeFormatter));
-            btnCrear.setEnabled(true);
+
+
+            String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            DatabaseReference dtRf = firebaseDatabase.getReference().child(user).child("actividades");
+            dtRf.get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
+                @Override
+                public void onSuccess(DataSnapshot dataSnapshot) {
+                    for(DataSnapshot d : dataSnapshot.getChildren() ){
+                        if(d.getValue(Actividad.class).getFecha().equals(etFecha.getText().toString())){
+                            listaActividades.add(d.getValue(Actividad.class));
+                        }
+                    }
+                    if(!listaActividades.isEmpty()){
+                        for(Actividad actividad: listaActividades){
+                            if(!actividad.getTitulo().equals(titulo.getText().toString())){
+                                horaInbase = LocalTime.parse(actividad.getHoraInicio(),timeFormatter);
+                                horaFinbase = LocalTime.parse(actividad.getHoraFin(),timeFormatter);
+                                if((timeInicio.isBefore(horaInbase) && timeFin.isBefore(horaInbase)) || timeInicio.isAfter(horaFinbase) && timeFin.isAfter(horaFinbase)){
+                                    btnCrear.setEnabled(true);
+                                    mensaje.setText("El horario esta dispobible");
+                                    mensaje.setTextColor(Color.GREEN);
+                                    mensaje.setVisibility(View.VISIBLE);
+                                }else{
+                                    mensaje.setText("El horario no esta disponible");
+                                    mensaje.setTextColor(Color.RED);
+                                    mensaje.setVisibility(View.VISIBLE);
+                                    btnCrear.setEnabled(false);
+                                }
+                            }
+
+
+                        }
+                    }else{
+                        btnCrear.setEnabled(true);
+                    }
+
+                }
+            });
         });
+
 
         etFecha.setOnClickListener(view -> showDatePickerDialog());
         etHorainicio.setOnClickListener(view -> {
@@ -202,7 +245,6 @@ public class InsertarActivity extends AppCompatActivity {
             }
             pickerHoraFin.show(getSupportFragmentManager(),"HoraFin");
         });
-
 
     }
 

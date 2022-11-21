@@ -101,40 +101,55 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout"/>
+
         <ImageView
             android:id="@+id/ivInsertar"
-            android:scaleType="centerCrop"
             android:layout_width="0dp"
             android:layout_height="221dp"
-            android:layout_marginTop="32dp"
             android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="12dp"
+            android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.895"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvFechaDisponible"
             app:srcCompat="@drawable/placeholder_image" />
+
         <Button
-            android:layout_marginTop="16dp"
-            android:onClick="subirImagen"
             android:id="@+id/btnSubirImagen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:onClick="subirImagen"
             android:text="Subir foto"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ivInsertar"/>
+            app:layout_constraintTop_toBottomOf="@+id/ivInsertar" />
 
         <Button
             android:id="@+id/btnCrearActividad"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="32dp"
+            android:layout_marginTop="60dp"
             android:enabled="false"
             android:onClick="crearActividad"
             android:text="Crear actividad"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btnSubirImagen" />
+
+        <TextView
+            android:id="@+id/textViewMensaje"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="68dp"
+            android:text="TextView"
+            android:textColor="#4CAF50"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
