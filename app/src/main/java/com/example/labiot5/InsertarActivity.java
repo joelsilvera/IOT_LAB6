@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -63,7 +64,6 @@ public class InsertarActivity extends AppCompatActivity {
     Button btnSubirFoto;
     LocalTime timeInicio;
     LocalTime timeFin;
-    EditText titulo ;
     EditText descripcion ;
     LocalDate selectedLocalDate;
     String imageUrl;
