@@ -202,24 +202,35 @@ public class InsertarActivity extends AppCompatActivity {
                         }
                     }
                     if(!listaActividades.isEmpty()){
+                        List<Actividad> listaCruza = new ArrayList<>();
                         for(Actividad activity: listaActividades){
-                            if(!actividad.getKey().equals(activity.getKey())){
+                            if(actividad.getKey() == null || !actividad.getKey().equals(activity.getKey())){
                                 horaInbase = LocalTime.parse(activity.getHoraInicio(),timeFormatter);
                                 horaFinbase = LocalTime.parse(activity.getHoraFin(),timeFormatter);
-                                if((timeInicio.isBefore(horaInbase) && timeFin.isBefore(horaInbase)) || timeInicio.isAfter(horaFinbase) && timeFin.isAfter(horaFinbase)){
-                                    btnCrear.setEnabled(true);
-                                    mensaje.setText("El horario esta dispobible");
-                                    mensaje.setTextColor(Color.GREEN);
-                                    mensaje.setVisibility(View.VISIBLE);
-                                }else{
-                                    mensaje.setText("El horario no esta disponible");
-                                    mensaje.setTextColor(Color.RED);
-                                    mensaje.setVisibility(View.VISIBLE);
-                                    btnCrear.setEnabled(false);
+                                if(!((timeInicio.isBefore(horaInbase) && timeFin.isBefore(horaInbase)) || (timeInicio.isAfter(horaFinbase) && timeFin.isAfter(horaFinbase)))){
+                                    listaCruza.add(activity);
                                 }
                             }
+                        }
+                        Log.d("msg",listaCruza.size()+"");
+                        Log.d("msg",listaActividades.size()+"");
 
+                        if (listaCruza.size()==0){
+                            btnCrear.setEnabled(true);
+                            mensaje.setText("El horario esta dispobible");
+                            mensaje.setTextColor(Color.GREEN);
+                            mensaje.setVisibility(View.VISIBLE);
+                        }else{
+                            String val = "";
 
+                            for(Actividad act : listaCruza){
+                                val += "Actividad: " +act.getTitulo() + " | hora: "+act.getHoraInicio()+" - "+act.getHoraFin()+"\n";
+
+                            }
+                            mensaje.setText("El horario no esta disponible\n"+ val);
+                            mensaje.setTextColor(Color.RED);
+                            mensaje.setVisibility(View.VISIBLE);
+                            btnCrear.setEnabled(false);
                         }
                     }else{
                         btnCrear.setEnabled(true);
