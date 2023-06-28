@@ -1,4 +1,4 @@
-package com.example.labiot5;
+package com.example.IOT_LAB6;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;

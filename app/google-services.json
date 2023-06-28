@@ -1,34 +1,33 @@
 {
   "project_info": {
-    "project_number": "692817435466",
-    "firebase_url": "https://lab5-iot-ea6ba-default-rtdb.firebaseio.com",
-    "project_id": "lab5-iot-ea6ba",
-    "storage_bucket": "lab5-iot-ea6ba.appspot.com"
+    "project_number": "397811404611",
+    "project_id": "iotlab6-fa184",
+    "storage_bucket": "iotlab6-fa184.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:692817435466:android:6cf6a8f9cf838ec0bc7fb3",
+        "mobilesdk_app_id": "1:397811404611:android:7d4dd99ace1f47af6c69f6",
         "android_client_info": {
-          "package_name": "com.example.labiot5"
+          "package_name": "com.example.IOT_LAB6"
         }
       },
       "oauth_client": [
         {
-          "client_id": "692817435466-4sc9enco82rkhbcn73cu30a0gllul7sk.apps.googleusercontent.com",
+          "client_id": "397811404611-28fhtjop7cr9rgd1uqo5qmb43t6fekke.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCQ3KY6E9kw8QsbNc9wWT0L862H2_Gc_yY"
+          "current_key": "AIzaSyDPQcs8kJkrhu6NuBIj6EAoc8CP2Xg7Cf8"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "692817435466-4sc9enco82rkhbcn73cu30a0gllul7sk.apps.googleusercontent.com",
+              "client_id": "397811404611-28fhtjop7cr9rgd1uqo5qmb43t6fekke.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

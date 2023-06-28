@@ -1,4 +1,4 @@
-package com.example.labiot5;
+package com.example.IOT_LAB6;
 
 
 import android.content.Context;
@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
+
+import com.example.IOT_LAB6.R;
 
 public class ViewPagerAdapter extends PagerAdapter {
 

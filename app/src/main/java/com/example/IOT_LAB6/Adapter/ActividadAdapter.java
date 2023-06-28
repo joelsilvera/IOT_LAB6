@@ -1,4 +1,4 @@
-package com.example.labiot5.Adapter;
+package com.example.IOT_LAB6.Adapter;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -12,10 +12,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
-import com.example.labiot5.AgendaActivity;
-import com.example.labiot5.Entity.Actividad;
-import com.example.labiot5.InsertarActivity;
-import com.example.labiot5.R;
+import com.example.IOT_LAB6.AgendaActivity;
+import com.example.IOT_LAB6.Entity.Actividad;
+import com.example.IOT_LAB6.InsertarActivity;
+import com.example.IOT_LAB6.R;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;

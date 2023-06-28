@@ -1,7 +1,6 @@
-package com.example.labiot5;
+package com.example.IOT_LAB6;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,15 +19,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.labiot5.Adapter.ActividadAdapter;
-import com.example.labiot5.Entity.Actividad;
+import com.example.IOT_LAB6.Adapter.ActividadAdapter;
+import com.example.IOT_LAB6.Entity.Actividad;
+import com.example.IOT_LAB6.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -44,7 +41,8 @@ public class AgendaActivity extends AppCompatActivity {
     ProgressBar progressBar;
     LinearLayout emptyView;
 
-    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
+    //DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
+    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
 
     private LocalDate filtroFechaInicio = LocalDate.now();

@@ -1,4 +1,4 @@
-package com.example.labiot5;
+package com.example.IOT_LAB6;
 
 import org.junit.Test;
 

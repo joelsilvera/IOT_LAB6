@@ -1,4 +1,4 @@
-package com.example.labiot5.Entity;
+package com.example.IOT_LAB6.Entity;
 
 import com.google.firebase.database.Exclude;
 

@@ -12,5 +12,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "LabIOT5"
+rootProject.name = "IOT_LAB6"
 include ':app'

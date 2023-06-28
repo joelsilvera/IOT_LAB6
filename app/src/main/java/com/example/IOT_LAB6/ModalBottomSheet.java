@@ -1,4 +1,4 @@
-package com.example.labiot5;
+package com.example.IOT_LAB6;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.IOT_LAB6.R;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
@@ -21,7 +22,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 public class ModalBottomSheet extends BottomSheetDialogFragment {
-    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
+    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
     EditText etFechainicio;
     EditText etFechafin;
@@ -81,7 +82,16 @@ public class ModalBottomSheet extends BottomSheetDialogFragment {
                 @Override
                 public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                     // +1 because January is zero
-                    final String selectedDate = day + "/" + (month+1) + "/" + year;
+                    String dayStr = String.valueOf(day);
+                    String monthStr = String.valueOf(month+1);
+                    if(dayStr.length()==1){
+                        dayStr = "0" + dayStr;
+                    }
+                    if(monthStr.length()==1){
+                        monthStr = "0" + monthStr;
+                    }
+
+                    final String selectedDate = dayStr + "/" + monthStr + "/" + year;
                     fechaInicio = LocalDate.parse(selectedDate, dateFormatter);
                     if (!fechaInicio.isAfter(fechaFin)){
                         etFechainicio.setText(selectedDate);
@@ -99,7 +109,16 @@ public class ModalBottomSheet extends BottomSheetDialogFragment {
                 @Override
                 public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                     // +1 because January is zero
-                    final String selectedDate = day + "/" + (month+1) + "/" + year;
+                    String dayStr = String.valueOf(day);
+                    String monthStr = String.valueOf(month+1);
+                    if(dayStr.length()==1){
+                        dayStr = "0" + dayStr;
+                    }
+                    if(monthStr.length()==1){
+                        monthStr = "0" + monthStr;
+                    }
+
+                    final String selectedDate = dayStr + "/" + monthStr + "/" + year;
                     fechaFin = LocalDate.parse(selectedDate, dateFormatter);
                     if (!fechaFin.isBefore(fechaInicio)){
                         etFechafin.setText(selectedDate);

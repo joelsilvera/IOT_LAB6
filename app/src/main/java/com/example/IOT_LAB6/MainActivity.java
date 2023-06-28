@@ -1,4 +1,4 @@
-package com.example.labiot5;
+package com.example.IOT_LAB6;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,9 +10,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.IOT_LAB6.R;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
-import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;

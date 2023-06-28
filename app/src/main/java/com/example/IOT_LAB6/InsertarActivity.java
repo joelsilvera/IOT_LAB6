@@ -1,4 +1,4 @@
-package com.example.labiot5;
+package com.example.IOT_LAB6;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -21,7 +21,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.labiot5.Entity.Actividad;
+import com.example.IOT_LAB6.Entity.Actividad;
+import com.example.IOT_LAB6.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.timepicker.MaterialTimePicker;
@@ -48,7 +49,7 @@ public class InsertarActivity extends AppCompatActivity {
     Actividad actividad = new Actividad();
     List<Actividad> listaActividades = new ArrayList<>();
 
-    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
+    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
 
     final static LocalTime HORA_MIN = LocalTime.of(6,0);
@@ -266,7 +267,16 @@ public class InsertarActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 // +1 because January is zero
-                final String selectedDate = day + "/" + (month+1) + "/" + year;
+                String dayStr = String.valueOf(day);
+                String monthStr = String.valueOf(month+1);
+                if(dayStr.length()==1){
+                    dayStr = "0" + dayStr;
+                }
+                if(monthStr.length()==1){
+                    monthStr = "0" + monthStr;
+                }
+
+                final String selectedDate = dayStr + "/" + monthStr + "/" + year;
                 selectedLocalDate = LocalDate.parse(selectedDate, dateFormatter);
                 if (!selectedLocalDate.isBefore(LocalDate.now())){
                     etFecha.setText(selectedDate);
